@@ -1,0 +1,65 @@
+services:
+  # Metadata database: pipeline history, quality metrics, lineage.
+  metadata-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: etl_metadata
+      POSTGRES_USER: etl
+      POSTGRES_PASSWORD: etl
+    ports:
+      - "5432:5432"
+    volumes:
+      - metadata_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etl -d etl_metadata"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Target retail warehouse.
+  warehouse-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: retail_warehouse
+      POSTGRES_USER: etl
+      POSTGRES_PASSWORD: etl
+    ports:
+      - "5433:5432"
+    volumes:
+      - warehouse_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etl -d retail_warehouse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # One-shot pipeline runner.
+  pipeline:
+    build: .
+    depends_on:
+      metadata-db:
+        condition: service_healthy
+      warehouse-db:
+        condition: service_healthy
+    environment:
+      ETL_METADATA_DB_HOST: metadata-db
+      ETL_WAREHOUSE_DB_HOST: warehouse-db
+      ETL_WAREHOUSE_DB_PORT: 5432
+    command: ["python", "-m", "flows.etl_flow", "--pipeline", "retail_aggregation"]
+
+  # Monitoring dashboard.
+  dashboard:
+    build: .
+    depends_on:
+      metadata-db:
+        condition: service_healthy
+    environment:
+      ETL_METADATA_DB_HOST: metadata-db
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "dashboard/app.py",
+              "--server.port=8501", "--server.address=0.0.0.0"]
+
+volumes:
+  metadata_data:
+  warehouse_data:
