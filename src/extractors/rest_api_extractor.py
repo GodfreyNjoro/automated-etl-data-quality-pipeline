@@ -93,7 +93,10 @@ class RestApiExtractor(BaseExtractor):
                 resp = session.request(method, url, params=params, timeout=timeout)
                 if resp.status_code == 429:
                     retry_after = float(resp.headers.get("Retry-After", backoff * (2**attempt)))
-                    self.log.warning("Rate limited; backing off", extra={"retry_after": retry_after})
+                    self.log.warning(
+                        "Rate limited; backing off",
+                        extra={"retry_after": retry_after},
+                    )
                     time.sleep(retry_after)
                     continue
                 resp.raise_for_status()
@@ -133,14 +136,15 @@ class RestApiExtractor(BaseExtractor):
         cursor: Any = None
         pages_fetched = 0
 
+        page_size = pagination.get("page_size", 100)
         while pages_fetched < max_pages:
             page_params = dict(params)
             if page_type == "page":
                 page_params[pagination.get("page_param", "page")] = page
-                page_params[pagination.get("size_param", "per_page")] = pagination.get("page_size", 100)
+                page_params[pagination.get("size_param", "per_page")] = page_size
             elif page_type == "offset":
                 page_params[pagination.get("offset_param", "offset")] = offset
-                page_params[pagination.get("limit_param", "limit")] = pagination.get("page_size", 100)
+                page_params[pagination.get("limit_param", "limit")] = page_size
             elif page_type == "cursor" and cursor is not None:
                 page_params[pagination.get("cursor_param", "cursor")] = cursor
 

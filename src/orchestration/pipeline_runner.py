@@ -13,7 +13,6 @@ Prefect flow in ``flows/`` is a thin wrapper around it.
 
 from __future__ import annotations
 
-import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -130,7 +129,7 @@ class PipelineRunner:
     @classmethod
     def from_config(
         cls, pipeline_name: str, config_dir: Path | None = None, **kwargs: Any
-    ) -> "PipelineRunner":
+    ) -> PipelineRunner:
         pipeline = load_pipeline(pipeline_name, config_dir)
         return cls(pipeline, config_dir=config_dir, **kwargs)
 

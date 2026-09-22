@@ -72,7 +72,11 @@ class WarehouseLoader(BaseLoader):
                         index=False, chunksize=batch_size, method="multi",
                     )
                 elif strategy == "incremental":
-                    if incremental_key and incremental_key in df.columns and self._table_exists(conn, table, schema):
+                    if (
+                        incremental_key
+                        and incremental_key in df.columns
+                        and self._table_exists(conn, table, schema)
+                    ):
                         keys = df[incremental_key].dropna().unique().tolist()
                         if keys:
                             self._delete_existing(conn, table, schema, incremental_key, keys)

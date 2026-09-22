@@ -35,7 +35,7 @@ class Alert:
     def dedup_key(self) -> str:
         """Stable hash used for suppression across identical alerts."""
         digest = hashlib.sha1(
-            f"{self.key}|{self.severity}".encode("utf-8")
+            f"{self.key}|{self.severity}".encode()
         ).hexdigest()[:16]
         return f"{self.key}:{digest}"
 
@@ -46,7 +46,7 @@ class AlertManager:
     def __init__(
         self,
         settings: Settings | None = None,
-        repository: "MetadataRepository | None" = None,
+        repository: MetadataRepository | None = None,
         min_severity: str = "error",
     ) -> None:
         self.settings = settings or get_settings()

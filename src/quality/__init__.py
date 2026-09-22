@@ -9,8 +9,8 @@ report with per-expectation pass/fail status and metrics.
 
 from __future__ import annotations
 
-from src.quality.results import ExpectationResult, ValidationReport
 from src.quality.engine import QualityEngine, register_expectation
+from src.quality.results import ExpectationResult, ValidationReport
 
 __all__ = [
     "ExpectationResult",

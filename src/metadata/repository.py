@@ -11,9 +11,10 @@ when the database is reachable.
 from __future__ import annotations
 
 import json
+from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import datetime, timezone
-from typing import Any, Iterator
+from typing import Any
 
 import pandas as pd
 from sqlalchemy import create_engine, text
@@ -101,7 +102,8 @@ class MetadataRepository:
                 conn.execute(
                     text(
                         """
-                        INSERT INTO pipeline_runs (run_id, pipeline_name, status, started_at, triggered_by)
+                        INSERT INTO pipeline_runs
+                            (run_id, pipeline_name, status, started_at, triggered_by)
                         VALUES (:run_id, :name, 'running', :started_at, :triggered_by)
                         ON CONFLICT (run_id) DO NOTHING
                         """

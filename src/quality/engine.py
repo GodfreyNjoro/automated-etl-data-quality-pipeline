@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Callable
+import contextlib
+from collections.abc import Callable
 
 import pandas as pd
 
@@ -127,8 +128,6 @@ class QualityEngine:
         elif exp.type in {"custom", "business_rule"}:
             expression = exp.params.get("expression")
             if expression:
-                try:
+                with contextlib.suppress(Exception):
                     mask |= ~df.eval(expression)
-                except Exception:  # noqa: BLE001
-                    pass
         return mask.fillna(False)

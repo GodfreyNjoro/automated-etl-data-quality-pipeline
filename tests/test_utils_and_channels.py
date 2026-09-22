@@ -46,8 +46,7 @@ def test_configure_logging_plain_and_json():
 
 
 def _settings(**overrides) -> Settings:
-    base = dict(alert_email_enabled=False, slack_webhook_url="")
-    base.update(overrides)
+    base = {"alert_email_enabled": False, "slack_webhook_url": "", **overrides}
     return Settings(**base)
 
 

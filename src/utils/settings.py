@@ -7,7 +7,6 @@ variables (never hard-coded), following twelve-factor app conventions. A local
 
 from __future__ import annotations
 
-import os
 from functools import lru_cache
 from pathlib import Path
 

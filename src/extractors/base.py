@@ -25,7 +25,7 @@ class ExtractionResult:
     @classmethod
     def from_frame(
         cls, source: SourceConfig, frame: pd.DataFrame, **metadata: Any
-    ) -> "ExtractionResult":
+    ) -> ExtractionResult:
         return cls(
             source_name=source.name,
             source_type=source.type,

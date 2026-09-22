@@ -147,7 +147,8 @@ class DashboardData:
         if base.exists():
             for path in sorted(base.rglob("*.csv")):
                 try:
-                    count = sum(1 for _ in open(path)) - 1
+                    with open(path) as handle:
+                        count = sum(1 for _ in handle) - 1
                 except Exception:  # noqa: BLE001
                     count = 0
                 rows.append(

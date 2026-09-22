@@ -25,7 +25,6 @@ from src.utils.logging_config import configure_logging, get_logger
 
 try:
     from prefect import flow, task
-    from prefect.tasks import exponential_backoff
 
     _PREFECT_AVAILABLE = True
 except Exception:  # pragma: no cover - Prefect optional at import time

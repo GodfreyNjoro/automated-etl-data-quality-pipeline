@@ -1,0 +1,27 @@
+# Ruff configuration for linting and import ordering.
+# Kept intentionally focused: correctness (pyflakes), style (pycodestyle),
+# import ordering (isort), modern-Python idioms (pyupgrade), common bug
+# patterns (bugbear), comprehension and simplification hints.
+
+target-version = "py310"
+line-length = 100
+
+[lint]
+select = ["E", "W", "F", "I", "UP", "B", "C4", "SIM"]
+ignore = [
+    "E203",  # whitespace before ':' - conflicts with common formatters
+    "B008",  # function call in default argument - used deliberately for DI
+]
+
+[lint.per-file-ignores]
+# Tests favour readability over some lint idioms.
+"tests/*" = ["E501"]
+# Package initialisers re-export names.
+"__init__.py" = ["F401"]
+# Entry points adjust sys.path before importing the package, so imports
+# deliberately follow that setup rather than sitting at the very top.
+"dashboard/app.py" = ["E402"]
+"examples/retail_aggregation/run_example.py" = ["E402"]
+
+[lint.isort]
+known-first-party = ["src", "flows", "dashboard", "examples"]

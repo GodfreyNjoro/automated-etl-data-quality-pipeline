@@ -8,12 +8,12 @@ from src.utils.settings import Settings
 
 
 def _settings(**overrides) -> Settings:
-    base = dict(
-        alert_email_enabled=False,
-        slack_webhook_url="",
-        alert_suppression_minutes=30,
-    )
-    base.update(overrides)
+    base = {
+        "alert_email_enabled": False,
+        "slack_webhook_url": "",
+        "alert_suppression_minutes": 30,
+        **overrides,
+    }
     return Settings(**base)
 
 

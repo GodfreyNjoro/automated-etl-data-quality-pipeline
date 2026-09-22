@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from typing import Any
 
-import numpy as np
 import pandas as pd
 
 from src.quality.results import ExpectationResult
@@ -29,7 +28,9 @@ _PANDAS_TYPE_ALIASES = {
 }
 
 
-def _result(cfg: ExpectationConfig, success: bool, observed: dict[str, Any], message: str) -> ExpectationResult:
+def _result(
+    cfg: ExpectationConfig, success: bool, observed: dict[str, Any], message: str
+) -> ExpectationResult:
     return ExpectationResult(
         name=cfg.name,
         type=cfg.type,
