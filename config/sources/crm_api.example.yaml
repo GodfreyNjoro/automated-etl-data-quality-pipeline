@@ -1,0 +1,23 @@
+# Example REST API source configuration (CRM customers).
+# Copy to crm_api.yaml to pull live customer records.
+name: crm_api
+type: rest_api
+description: Customer records from the CRM REST API (API-key authenticated, cursor paginated).
+options:
+  base_url: https://crm.example.com/api
+  endpoint: /v1/customers
+  method: GET
+  auth:
+    type: api_key
+    header: X-API-Key
+    value: ${CRM_API_KEY}
+  records_path: data
+  rate_limit_per_sec: 8
+  pagination:
+    type: cursor
+    cursor_param: cursor
+    next_cursor_path: meta.next_cursor
+    page_size: 200
+  max_retries: 4
+  retry_backoff_seconds: 1.5
+  timeout: 30

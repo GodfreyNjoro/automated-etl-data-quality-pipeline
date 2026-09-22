@@ -1,0 +1,10 @@
+name: pos_transactions
+type: json
+description: >-
+  Point-of-sale transactions. In production these come from the POS REST API
+  (see pos_api.example.yaml). The example ships a JSON payload identical in shape
+  to the API response so the pipeline runs offline.
+options:
+  path: examples/retail_aggregation/data/pos_transactions.json
+  records_path: data
+  incremental_key: transaction_ts

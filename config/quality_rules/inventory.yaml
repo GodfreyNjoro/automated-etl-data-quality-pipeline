@@ -1,0 +1,37 @@
+name: inventory
+dataset: inventory
+expectations:
+  - name: required_columns_present
+    type: schema
+    severity: error
+    params:
+      columns:
+        product_id: string
+        store_id: string
+        quantity_on_hand: int
+
+  - name: product_store_unique
+    type: unique
+    columns: [product_id, store_id]
+    severity: error
+
+  - name: quantity_present
+    type: not_null
+    columns: [quantity_on_hand]
+    severity: error
+
+  - name: quantity_non_negative
+    type: range
+    columns: [quantity_on_hand]
+    severity: error
+    params:
+      min: 0
+      max: 1000000
+
+  - name: reorder_level_reasonable
+    type: range
+    columns: [reorder_level]
+    severity: warning
+    params:
+      min: 0
+      max: 10000

@@ -1,0 +1,54 @@
+name: pos_transactions
+dataset: pos_transactions
+expectations:
+  - name: required_columns_present
+    type: schema
+    severity: error
+    params:
+      columns:
+        transaction_id: string
+        product_id: string
+        quantity: int
+        unit_price: float
+        total_amount: float
+
+  - name: transaction_id_unique
+    type: primary_key
+    columns: [transaction_id]
+    severity: error
+    params:
+      primary_key: true
+
+  - name: product_reference_present
+    type: not_null
+    columns: [product_id]
+    severity: error
+
+  - name: quantity_positive
+    type: range
+    columns: [quantity]
+    severity: error
+    params:
+      min: 1
+      max: 10000
+
+  - name: payment_method_valid
+    type: allowed_values
+    columns: [payment_method]
+    severity: error
+    params:
+      values: [card, cash, mobile, voucher]
+
+  - name: total_amount_consistent
+    type: business_rule
+    severity: warning
+    params:
+      expression: "abs(total_amount - (quantity * unit_price)) < 0.01"
+      max_violation_rate: 0.0
+
+  - name: transactions_are_fresh
+    type: freshness
+    columns: [transaction_ts]
+    severity: warning
+    params:
+      max_age_hours: 168

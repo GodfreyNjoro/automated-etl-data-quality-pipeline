@@ -1,0 +1,56 @@
+name: product_catalog
+dataset: product_catalog
+expectations:
+  - name: required_columns_present
+    type: schema
+    severity: error
+    params:
+      columns:
+        product_id: string
+        product_name: string
+        category: string
+        unit_price: float
+      allow_extra: true
+
+  - name: product_id_is_primary_key
+    type: primary_key
+    columns: [product_id]
+    severity: error
+    params:
+      primary_key: true
+
+  - name: product_name_complete
+    type: not_null
+    columns: [product_name]
+    severity: error
+
+  - name: category_complete
+    type: not_null
+    columns: [category]
+    severity: warning
+    params:
+      max_null_rate: 0.0
+
+  - name: category_in_allowed_set
+    type: allowed_values
+    columns: [category]
+    severity: warning
+    params:
+      values: [Electronics, Grocery, Apparel, Home, Beauty, Toys]
+
+  - name: unit_price_non_negative
+    type: range
+    columns: [unit_price]
+    severity: error
+    params:
+      min: 0
+      max: 100000
+
+  - name: unit_price_outliers
+    type: outliers
+    columns: [unit_price]
+    severity: warning
+    params:
+      method: iqr
+      factor: 3.0
+      max_outlier_rate: 0.02

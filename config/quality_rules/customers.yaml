@@ -1,0 +1,38 @@
+name: customers
+dataset: customers
+expectations:
+  - name: required_columns_present
+    type: schema
+    severity: error
+    params:
+      columns:
+        customer_id: string
+        email: string
+        loyalty_tier: string
+
+  - name: customer_id_is_primary_key
+    type: primary_key
+    columns: [customer_id]
+    severity: error
+    params:
+      primary_key: true
+
+  - name: email_present
+    type: not_null
+    columns: [email]
+    severity: error
+
+  - name: loyalty_tier_valid
+    type: allowed_values
+    columns: [loyalty_tier]
+    severity: error
+    params:
+      values: [bronze, silver, gold, platinum]
+
+  - name: lifetime_value_non_negative
+    type: range
+    columns: [lifetime_value]
+    severity: warning
+    params:
+      min: 0
+      max: 1000000

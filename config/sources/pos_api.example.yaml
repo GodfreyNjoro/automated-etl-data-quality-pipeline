@@ -1,0 +1,36 @@
+# Example REST API source configuration (POS transactions).
+# Copy to pos_api.yaml and point a pipeline stage at it to pull live data.
+# Secrets are injected from environment variables via ${VAR} interpolation.
+name: pos_api
+type: rest_api
+description: Point-of-sale transactions REST API with paginated, authenticated access.
+options:
+  base_url: https://api.retail.example.com
+  endpoint: /v2/transactions
+  method: GET
+  # Authentication: none | api_key | bearer | basic
+  auth:
+    type: bearer
+    token: ${POS_API_TOKEN}
+  # Records live under this dotted path in the JSON response body.
+  records_path: data
+  # Client-side rate limiting (requests per second, token-bucket).
+  rate_limit_per_sec: 5
+  # Pagination: none | page | offset | cursor
+  pagination:
+    type: page
+    page_param: page
+    size_param: page_size
+    page_size: 500
+    start_page: 1
+  # Retry/backoff for transient failures and HTTP 429.
+  max_retries: 4
+  retry_backoff_seconds: 2.0
+  max_pages: 1000
+  timeout: 30
+  # Static query parameters sent on every request.
+  params:
+    since: ${POS_SINCE:2024-01-01}
+  # Incremental extraction: the query parameter used to request records
+  # newer than the last watermark.
+  incremental_param: since

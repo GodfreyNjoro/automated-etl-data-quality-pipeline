@@ -1,0 +1,7 @@
+name: product_catalog
+type: csv
+description: Product catalog exported from the merchandising system.
+options:
+  path: examples/retail_aggregation/data/products.csv
+  encoding: utf-8
+  delimiter: ","

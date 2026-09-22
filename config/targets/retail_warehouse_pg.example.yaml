@@ -1,0 +1,16 @@
+# Example PostgreSQL warehouse target.
+# Copy to retail_warehouse.yaml to load into a production warehouse.
+name: retail_warehouse
+type: postgresql
+description: Unified retail warehouse (PostgreSQL).
+connection:
+  host: ${WAREHOUSE_DB_HOST:localhost}
+  port: ${WAREHOUSE_DB_PORT:5432}
+  database: ${WAREHOUSE_DB_NAME:retail_warehouse}
+  user: ${WAREHOUSE_DB_USER:etl}
+  password: ${WAREHOUSE_DB_PASSWORD:etl}
+options:
+  schema: public
+  batch_size: 5000
+  pool_size: 5
+  max_overflow: 10

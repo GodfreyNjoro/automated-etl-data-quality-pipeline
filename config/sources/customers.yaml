@@ -1,0 +1,9 @@
+name: customers
+type: json
+description: >-
+  Customer records from the CRM. In production these come from the CRM REST API
+  (see crm_api.example.yaml). The example ships a JSON payload matching the API
+  response shape.
+options:
+  path: examples/retail_aggregation/data/customers.json
+  records_path: data

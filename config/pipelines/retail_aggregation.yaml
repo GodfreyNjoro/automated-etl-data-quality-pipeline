@@ -1,0 +1,79 @@
+name: retail_aggregation
+description: >-
+  Aggregate four retail sources (product catalog, inventory, POS transactions and
+  CRM customers) into a unified retail warehouse, validating data quality and
+  quarantining bad records at every stage.
+# Cron schedule used when deploying via Prefect (daily at 02:00).
+schedule: "0 2 * * *"
+max_retries: 2
+retry_backoff_seconds: 2.0
+
+stages:
+  - name: products
+    source: product_catalog
+    target: retail_warehouse
+    target_table: dim_product
+    load_strategy: full
+    quality_rule_set: product_catalog
+    transforms:
+      - type: rename_lower
+      - type: cast
+        params:
+          columns:
+            unit_price: float
+      - type: drop_duplicates
+        params:
+          subset: [product_id]
+          keep: first
+
+  - name: customers
+    source: customers
+    target: retail_warehouse
+    target_table: dim_customer
+    load_strategy: full
+    quality_rule_set: customers
+    transforms:
+      - type: rename_lower
+      - type: cast
+        params:
+          columns:
+            lifetime_value: float
+            signup_date: datetime
+
+  - name: inventory
+    source: inventory
+    target: retail_warehouse
+    target_table: fact_inventory
+    load_strategy: full
+    quality_rule_set: inventory
+    depends_on: [products]
+    transforms:
+      - type: rename_lower
+      - type: cast
+        params:
+          columns:
+            quantity_on_hand: int
+            reorder_level: int
+            last_counted: datetime
+
+  - name: transactions
+    source: pos_transactions
+    target: retail_warehouse
+    target_table: fact_sales
+    load_strategy: incremental
+    incremental_key: transaction_id
+    quality_rule_set: pos_transactions
+    depends_on: [products]
+    transforms:
+      - type: rename_lower
+      - type: cast
+        params:
+          columns:
+            quantity: int
+            unit_price: float
+            total_amount: float
+            transaction_ts: datetime
+      - type: derive
+        params:
+          column: revenue
+          expression: "quantity * unit_price"

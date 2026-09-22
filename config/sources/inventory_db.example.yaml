@@ -1,0 +1,20 @@
+# Example PostgreSQL source configuration (inventory).
+# Copy to inventory_db.yaml and point a pipeline stage at it to read live data.
+name: inventory_db
+type: postgresql
+description: Warehouse inventory levels read from the operational PostgreSQL database.
+options:
+  connection:
+    host: ${INVENTORY_DB_HOST:localhost}
+    port: ${INVENTORY_DB_PORT:5432}
+    database: ${INVENTORY_DB_NAME:inventory}
+    user: ${INVENTORY_DB_USER:readonly}
+    password: ${INVENTORY_DB_PASSWORD}
+  # Either read a whole table...
+  table: public.inventory_levels
+  # ...or provide a custom query instead (uncomment):
+  # query: "SELECT product_id, store_id, quantity_on_hand, reorder_level, last_counted FROM inventory_levels"
+  incremental_key: last_counted
+  batch_size: 10000
+  pool_size: 5
+  max_overflow: 10

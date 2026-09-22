@@ -1,0 +1,9 @@
+name: inventory
+type: csv
+description: >-
+  Warehouse stock levels. In production this is read from the inventory
+  PostgreSQL database; see inventory_db.example.yaml for that configuration.
+  The example ships a CSV export so the pipeline runs without external services.
+options:
+  path: examples/retail_aggregation/data/inventory.csv
+  encoding: utf-8

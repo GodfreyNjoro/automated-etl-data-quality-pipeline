@@ -1,0 +1,10 @@
+name: retail_warehouse
+type: sqlite
+description: >-
+  Unified retail warehouse. The example uses a local SQLite database so it runs
+  with no external services; see retail_warehouse_pg.example.yaml for the
+  production PostgreSQL configuration.
+connection:
+  path: examples/retail_aggregation/data/retail_warehouse.db
+options:
+  batch_size: 5000
