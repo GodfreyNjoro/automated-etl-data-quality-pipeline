@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.Python
+venv/
+.venv/
+env/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Environment & secrets
+.env
+*.env
+!.env.example
+
+# Data artifacts produced by the example run (regenerated on demand)
+examples/retail_aggregation/data/*.csv
+examples/retail_aggregation/data/*.json
+examples/retail_aggregation/data/*.db
+data/quarantine/
+
+# Prefect
+.prefect/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Logs
+*.log
